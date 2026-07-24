@@ -35,3 +35,20 @@ body{background:#fcfcfb}.container{width:min(1080px,calc(100% - 32px))}.site-hea
 .form-section{background:#fff;border-radius:14px;padding:20px}.form-section-title strong{font-size:1rem}.tag-editor{display:grid;gap:9px}.tag-editor>span{font-size:.8rem;font-weight:800;color:var(--muted)}.tag-presets,.selected-tags{display:flex;flex-wrap:wrap;gap:7px}.tag-presets button{border:1px solid var(--line);background:#fff;padding:7px 10px;border-radius:999px;cursor:pointer;color:#555}.tag-presets button.active{background:#171717;color:#fff;border-color:#171717}.tag-custom-row{display:flex;gap:8px}.tag-custom-row input{flex:1}.selected-tag{border:0;cursor:pointer}.empty{padding:28px}
 @media(max-width:720px){.compact-filter{grid-template-columns:1fr 1fr}.filter-search{grid-column:1/-1}.card-core{grid-template-columns:1fr 92px}}
 @media(max-width:520px){.compact-filter{grid-template-columns:1fr}.filter-search{grid-column:auto}.minimal-hero{padding-top:42px}.card-image{height:140px}.card-core{grid-template-columns:1fr 80px}.tag-custom-row{align-items:stretch}.tag-custom-row .btn{padding-inline:12px}}
+
+/* beta 1.5.0 UI refinements */
+:root{--primary:#e87524;--primary-dark:#c9570c;--soft:#fff1e6;--gold:#f2a10b;--bg:#faf9f7}
+body{background:var(--bg)}
+.brand{color:var(--primary)}
+.minimal-hero{padding:24px 0 8px;min-height:0}.minimal-hero:empty{display:none}
+.filter-panel{border-color:#eadfd7;background:#fffaf6}.filter-control select{appearance:auto;padding:12px 14px;text-align:left}
+.badge{background:var(--soft);color:#b9510c}.event-card:hover{border-color:#efb58e}.card-placeholder{background:#fff3ea}.placeholder-icon{font-size:2.1rem;font-weight:900;color:#e87524}
+.card-core>div:first-child strong{color:#cf5f16}.hot-section{border-color:#f4c6a7;background:linear-gradient(135deg,#fff5eb,#fff)}.hot-ribbon{background:#e87524;color:#fff}.hot-heading h2{color:#b84b08}
+.tag-list{margin:8px 0 4px}.tag{background:#f4f1ee;color:#83766e;font-size:.72rem;font-weight:650;padding:4px 8px}
+.rating-summary{display:inline-flex;align-items:center;gap:5px;color:#6f625a;font-size:.82rem}.rating-summary b{font-size:.9rem;color:#29231f}.star-symbol{color:#f2a10b;font-size:1rem}
+.rating-title-row{display:flex;align-items:center;justify-content:space-between;gap:14px}.rating-title-row h3{margin:0}.star-picker{display:flex;gap:5px;margin-top:12px}.star-option{border:0;background:transparent;color:#d7d1cc;font-size:2rem;line-height:1;cursor:pointer;padding:2px}.star-option:hover,.star-option.active{color:#f2a10b;transform:scale(1.06)}
+.participation-summary span{background:#fff;border-color:#eadfd7}.participation-btn{border:1px solid transparent;transition:.15s}.participation-btn.cooking{background:#fff3df;color:#a35b00}.participation-btn.completed{background:#eaf7ee;color:#17633a}.participation-btn.cooking.selected{background:#f4a340;color:#fff;border-color:#d67b13;box-shadow:0 0 0 3px rgba(244,163,64,.22)}.participation-btn.completed.selected{background:#2f9a59;color:#fff;border-color:#18733d;box-shadow:0 0 0 3px rgba(47,154,89,.2)}
+.official-url{margin-top:18px;overflow-wrap:anywhere}.official-url a{color:#d65e13;text-decoration:underline;text-underline-offset:3px;font-weight:700}
+.btn.primary{background:var(--primary)}.btn.primary:hover{background:var(--primary-dark)}.text-link{color:var(--primary)}input:focus,select:focus,textarea:focus{border-color:#e87524;box-shadow:0 0 0 3px rgba(232,117,36,.13)}
+.tag-admin-form{display:grid;grid-template-columns:190px 1fr auto;gap:10px;margin:14px 0}.tag-catalog-list{display:grid;gap:8px}.tag-catalog-item{display:grid;grid-template-columns:130px minmax(160px,1fr) 80px auto auto;align-items:center;gap:8px;padding:10px;border:1px solid var(--line);border-radius:12px}.tag-type{font-size:.78rem;font-weight:800;color:var(--muted)}.tag-active{display:flex;grid-template-columns:auto auto;align-items:center;gap:5px;font-size:.8rem}.tag-active input{width:auto}
+@media(max-width:720px){.tag-admin-form,.tag-catalog-item{grid-template-columns:1fr}.tag-active{justify-content:flex-start}.rating-title-row{align-items:flex-start;flex-direction:column}}
