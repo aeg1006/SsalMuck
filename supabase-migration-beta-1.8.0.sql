@@ -1,4 +1,4 @@
--- ssalmuck beta 1.8.0 migration
+-- ssalmuck beta 1.8.1 migration
 -- 기존 이벤트, 회원, 댓글, 별점 및 참여 기록은 유지됩니다.
 
 alter table public.profiles add column if not exists age integer;
