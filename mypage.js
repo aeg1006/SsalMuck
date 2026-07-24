@@ -3,7 +3,7 @@ let user=null;
 const content=document.getElementById('mypageContent'),required=document.getElementById('loginRequired'),message=document.getElementById('message');
 function rewardLabel(e){return e.reward||([e.reward_type,e.reward_amount!=null?Number(e.reward_amount).toLocaleString('ko-KR')+'원':''].filter(Boolean).join(' ')||'보상 미정')}
 function savedMarkup(e,status){
-  return `<article class="saved-event-item"><div><span class="badge">${escapeHtml(e.category||'기타')}</span><h3>${escapeHtml(e.title)}</h3><p><b>${escapeHtml(rewardLabel(e))}</b> · ${escapeHtml(e.duration||((e.duration_minutes!=null)?`약 ${e.duration_minutes}분`:'시간 미정'))}</p><small>마감 ${e.deadline||'-'}</small></div><div class="saved-actions"><a class="btn secondary" href="index.html?event=${e.id}">이벤트 보기</a>${status==='cooking'?`<button class="btn completed" data-participation="completed" data-event="${e.id}">✅ 완료로 이동</button>`:`<button class="btn cooking" data-participation="cooking" data-event="${e.id}">🍳 다시 취사중</button>`}<button class="btn danger" data-participation="remove" data-event="${e.id}">목록에서 제거</button></div></article>`;
+  return `<article class="saved-event-item"><div><span class="badge">${escapeHtml(e.category||'기타')}</span><h3>${escapeHtml(e.title)}</h3><p><b>${escapeHtml(rewardLabel(e))}</b> · ${escapeHtml(e.duration||((e.duration_minutes!=null)?`약 ${e.duration_minutes}분`:'시간 미정'))}</p><small>마감 ${e.deadline||'-'}</small></div><div class="saved-actions"><a class="btn secondary" href="index.html?event=${e.id}">이벤트 보기</a>${status==='cooking'?`<button class="btn completed" data-participation="completed" data-event="${e.id}">쌀먹 완료</button>`:`<button class="btn cooking" data-participation="cooking" data-event="${e.id}">쌀먹 예정</button>`}<button class="btn danger" data-participation="remove" data-event="${e.id}">목록에서 제거</button></div></article>`;
 }
 async function load(){
   if(!client)return;
@@ -25,7 +25,7 @@ async function load(){
   const completed=(participations||[]).filter(p=>p.status==='completed').map(p=>map.get(p.event_id)).filter(Boolean);
   document.getElementById('postStat').textContent=posts?.length||0;document.getElementById('commentStat').textContent=commentCount||0;document.getElementById('ratingStat').textContent=ratingCount||0;
   document.getElementById('cookingCount').textContent=`${cooking.length}개`;document.getElementById('completedCount').textContent=`${completed.length}개`;
-  document.getElementById('cookingEvents').innerHTML=cooking.length?cooking.map(e=>savedMarkup(e,'cooking')).join(''):'<p class="muted">취사중인 이벤트가 없습니다.</p>';
+  document.getElementById('cookingEvents').innerHTML=cooking.length?cooking.map(e=>savedMarkup(e,'cooking')).join(''):'<p class="muted">예정된 이벤트가 없습니다.</p>';
   document.getElementById('completedEvents').innerHTML=completed.length?completed.map(e=>savedMarkup(e,'completed')).join(''):'<p class="muted">완료한 이벤트가 없습니다.</p>';
   document.getElementById('myPosts').innerHTML=posts?.length?posts.map(e=>`<article class="admin-item"><div><h3>${escapeHtml(e.title)}</h3><p class="muted">${escapeHtml(e.category)} · ${escapeHtml(e.reward)}</p></div><div class="admin-actions"><a class="btn secondary" href="write.html?edit=${e.id}">수정</a><button class="btn danger" data-delete="${e.id}">삭제</button></div></article>`).join(''):'<p class="muted">작성한 글이 없습니다.</p>';
 }
