@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
+  <defs>
+    <linearGradient id="bowl" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ff765d"/>
+      <stop offset="1" stop-color="#d9342d"/>
+    </linearGradient>
+    <linearGradient id="rice" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fffdf1"/>
+      <stop offset="1" stop-color="#f5df9c"/>
+    </linearGradient>
+  </defs>
+  <ellipse cx="32" cy="27" rx="23" ry="14" fill="url(#rice)" stroke="#d5b96b" stroke-width="2"/>
+  <circle cx="21" cy="23" r="6" fill="#fffef5"/>
+  <circle cx="31" cy="19" r="7" fill="#fffef5"/>
+  <circle cx="42" cy="23" r="6" fill="#fffef5"/>
+  <path d="M9 29h46c-1.5 17-10.5 25-23 25S10.5 46 9 29Z" fill="url(#bowl)" stroke="#a92c27" stroke-width="2.5"/>
+  <path d="M15 34h34" stroke="#ffb09d" stroke-width="3" stroke-linecap="round" opacity=".75"/>
+  <path d="M25 55h14" stroke="#8c2724" stroke-width="3" stroke-linecap="round"/>
+</svg>
