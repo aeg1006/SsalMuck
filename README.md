@@ -21,3 +21,6 @@
 
 ## 1.2.1 hotfix
 기존 1.2.0 SQL에서 view 컬럼 순서 오류가 발생할 수 있어 수정했습니다. `supabase-migration-beta-1.2.1.sql`만 실행하세요. 기존 이벤트 데이터는 삭제되지 않습니다.
+
+
+최신 migration: `supabase-migration-beta-1.8.0.sql`
