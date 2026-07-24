@@ -1,1 +1,48 @@
-<!DOCTYPE html><html lang="ko"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>글쓰기 · ssalmuck</title><link rel="stylesheet" href="styles.css?v=1.8.1"></head><body><header class="site-header"><div class="container header-inner"><div><a class="brand" href="index.html">ssalmuck</a> <span class="version">beta 1.8.1</span></div><nav><a href="index.html">이벤트</a><a href="about.html">소개</a><a data-write-link href="write.html">글쓰기</a><a href="mypage.html" data-auth-link>로그인</a><a href="admin.html" data-admin-link hidden>관리자</a></nav></div></header><main class="container admin-layout"><section><h1 class="page-title">이벤트 등록</h1><p id="userStatus" class="muted"></p><p class="required-note"><span class="req">*</span> 필수 입력 항목</p><div id="message" class="notice" hidden></div></section><section id="loginRequired" class="admin-card" hidden><h2>로그인이 필요합니다</h2><a class="btn primary" href="auth.html">로그인</a></section><section id="editorSection" class="admin-card" hidden><form id="eventForm" class="event-form"><input id="eventId" type="hidden"><label><span class="field-label">제목 <span class="req">*</span></span><input id="title" required maxlength="100"></label><section class="form-section"><div class="form-section-title"><strong>보상</strong></div><label><span class="field-label">썸네일 표시 <span class="req">*</span></span><input id="reward" required maxlength="80" placeholder="예: 네이버페이 10,000원 · 추첨"></label><label>상세내역<textarea id="rewardDetails" rows="4" maxlength="2000" placeholder="예: 1등 5만원, 2등 1만원"></textarea></label><div class="tag-editor"><span>보상 태그</span><div class="tag-presets" data-tag-group="reward"></div><div class="tag-custom-row"><input data-custom-tag="reward" placeholder="태그 직접 입력"><button class="btn secondary" type="button" data-add-tag="reward">추가</button></div><div class="selected-tags" id="rewardTags"></div></div></section><section class="form-section"><div class="form-section-title"><strong>참여 방법·소요시간</strong></div><label><span class="field-label">참여 방법 <span class="req">*</span></span><input id="participationMethod" required maxlength="80" placeholder="예: 유튜브 댓글 작성"></label><div class="form-row"><label><span class="field-label">썸네일 소요시간 <span class="req">*</span></span><input id="duration" required maxlength="40" placeholder="예: 5분"></label><label>정렬용 시간(분)<input id="durationMinutes" type="number" min="0" step="1" placeholder="5"></label></div><label>상세내역<textarea id="durationDetails" rows="4" maxlength="2000" placeholder="예: 유튜브 구독 후 댓글 작성, 이메일 인증 필요"></textarea></label><div class="tag-editor"><span>참여 방법 태그</span><div class="tag-presets" data-tag-group="effort"></div><div class="tag-custom-row"><input data-custom-tag="effort" placeholder="태그 직접 입력"><button class="btn secondary" type="button" data-add-tag="effort">추가</button></div><div class="selected-tags" id="effortTags"></div></div></section><section class="form-section"><div class="form-section-title"><strong>자격요건</strong></div><label>상세내역<textarea id="eligibility" rows="4" maxlength="2000" placeholder="예: 인천광역시 거주자, 대학생"></textarea></label><div class="tag-editor"><span>요건 태그</span><div class="tag-presets" data-tag-group="eligibility"></div><div class="tag-custom-row"><input data-custom-tag="eligibility" placeholder="예: 인천광역시"><button class="btn secondary" type="button" data-add-tag="eligibility">추가</button></div><div class="selected-tags" id="eligibilityTags"></div></div></section><section class="form-section"><div class="form-row three"><label><span class="field-label">마감일 <span class="req">*</span></span><input id="deadline" type="date" required></label><label>당첨 발표일<input id="winnerAnnouncementDate" type="date"></label><label>참여 링크<input id="url" type="url" placeholder="https://..."></label></div><label>대표 이미지<input id="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label><img id="imagePreview" class="image-preview" alt="이미지 미리보기"><input id="existingImageUrl" type="hidden"><label><span class="field-label">추가 홍보자료·상세설명 <span class="req">*</span></span><textarea id="content" required rows="8" maxlength="5000"></textarea></label></section><div class="form-actions"><button class="btn primary">저장</button><button class="btn secondary" id="cancelEdit" type="button" hidden>취소</button></div></form></section></main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script src="config.js?v=1.8.1"></script><script src="supabase-client.js?v=1.8.1"></script><script src="common.js?v=1.8.1"></script><script src="write.js?v=1.8.1"></script></body></html>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>글쓰기 · ssalmuck</title>
+  <link rel="stylesheet" href="styles.css?v=1.9.0">
+</head>
+<body>
+<header class="site-header">
+  <div class="container header-inner">
+    <div><a class="brand" href="index.html">ssalmuck</a> <span class="version">beta 1.9.0</span></div>
+    <nav><a href="index.html">이벤트</a><a href="about.html">소개</a><a data-write-link href="write.html">글쓰기</a><a href="mypage.html" data-auth-link>로그인</a><a href="admin.html" data-admin-link hidden>관리자</a></nav>
+  </div>
+</header>
+<main class="container admin-layout compact-write-layout">
+  <section>
+    <h1 class="page-title">이벤트 등록</h1>
+    <p id="userStatus" class="muted"></p>
+    <p class="required-note"><span class="req">*</span> 필수 입력 항목</p>
+    <div id="message" class="notice" hidden></div>
+  </section>
+  <section id="loginRequired" class="admin-card" hidden>
+    <h2>로그인이 필요합니다</h2><a class="btn primary" href="auth.html">로그인</a>
+  </section>
+  <section id="editorSection" class="admin-card" hidden>
+    <form id="eventForm" class="event-form simplified-event-form">
+      <input id="eventId" type="hidden">
+      <label><span class="field-label">제목 <span class="req">*</span></span><input id="title" required maxlength="100" placeholder="이벤트 제목"></label>
+      <label><span class="field-label">보상 <span class="req">*</span></span><input id="reward" required maxlength="100" placeholder="예: 네이버페이 10,000원 · 추첨"></label>
+      <label><span class="field-label">참여 방법 <span class="req">*</span></span><input id="participationMethod" required maxlength="100" placeholder="예: 유튜브 댓글 작성"></label>
+      <label><span class="field-label">예상 소요시간 <span class="req">*</span></span><input id="duration" required maxlength="40" placeholder="예: 5분"></label>
+      <label><span class="field-label">상세 내역 <span class="req">*</span></span><textarea id="content" required rows="10" maxlength="5000" placeholder="보상 조건, 참여 절차, 자격 요건 등 필요한 내용을 한 번에 적어주세요."></textarea></label>
+      <div class="form-row">
+        <label>마감일 <span class="field-help">모르면 비워두세요</span><input id="deadline" type="date"></label>
+        <label>참여 링크<input id="url" type="url" placeholder="https://..."></label>
+      </div>
+      <label>대표 이미지<input id="image" type="file" accept="image/png,image/jpeg,image/webp,image/gif"></label>
+      <img id="imagePreview" class="image-preview" alt="이미지 미리보기">
+      <input id="existingImageUrl" type="hidden">
+      <div class="form-actions"><button class="btn primary">저장</button><button class="btn secondary" id="cancelEdit" type="button" hidden>취소</button></div>
+    </form>
+  </section>
+</main>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js?v=1.9.0"></script><script src="supabase-client.js?v=1.9.0"></script><script src="common.js?v=1.9.0"></script><script src="write.js?v=1.9.0"></script>
+</body>
+</html>

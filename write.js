@@ -1,12 +1,81 @@
-const {client,showMessage}=window.SSALMUCK;let user=null,editing=null;const selected={reward:new Set(),effort:new Set(),eligibility:new Set()},message=document.getElementById('message');
+const {client,showMessage}=window.SSALMUCK;
+let user=null,editing=null;
+const message=document.getElementById('message');
 const val=id=>document.getElementById(id).value.trim();
-function renderTags(group){document.getElementById(group+'Tags').innerHTML=[...selected[group]].map(t=>`<button type="button" class="tag selected-tag" data-remove-tag="${group}" data-tag="${t}">#${t} ×</button>`).join('');document.querySelectorAll(`[data-tag-group="${group}"] [data-tag]`).forEach(b=>b.classList.toggle('active',selected[group].has(b.dataset.tag)))}
-function addTag(group,tag){tag=tag.trim().replace(/^#/,'');if(!tag)return;selected[group].add(tag.slice(0,30));renderTags(group)}
-document.addEventListener('click',e=>{const preset=e.target.closest('[data-tag-group] [data-tag]');if(preset){const g=preset.parentElement.dataset.tagGroup,t=preset.dataset.tag;selected[g].has(t)?selected[g].delete(t):selected[g].add(t);renderTags(g)}const add=e.target.closest('[data-add-tag]');if(add){const g=add.dataset.addTag,input=document.querySelector(`[data-custom-tag="${g}"]`);addTag(g,input.value);input.value=''}const remove=e.target.closest('[data-remove-tag]');if(remove){selected[remove.dataset.removeTag].delete(remove.dataset.tag);renderTags(remove.dataset.removeTag)}});
-async function loadTagCatalog(){const fallback={reward:['현금','기프티콘','포인트','추첨','100% 당첨','선착순'],effort:['회원가입 필요','이메일 필요','본인인증','앱 설치','SNS 참여','친구 초대'],eligibility:['신규 회원','기존 회원','학생','직장인','군인','인천광역시','서울특별시','경기도']};let catalog=[];const {data,error}=await client.from('tag_catalog').select('*').eq('is_active',true).order('sort_order').order('name');if(!error)catalog=data||[];for(const group of Object.keys(fallback)){const names=catalog.filter(x=>x.tag_type===group).map(x=>x.name);const use=names.length?names:fallback[group];document.querySelector(`[data-tag-group="${group}"]`).innerHTML=use.map(t=>`<button type="button" data-tag="${t.replace(/"/g,'&quot;')}">#${t}</button>`).join('');renderTags(group)}}
-async function load(){if(!client)return;await loadTagCatalog();const session=await window.SSALMUCK.getSession();user=session?.user;if(!user){document.getElementById('loginRequired').hidden=false;return}document.getElementById('editorSection').hidden=false;document.getElementById('userStatus').textContent=user.email;const id=new URLSearchParams(location.search).get('edit');if(id)await loadEdit(id)}
-async function loadEdit(id){const [{data:e,error},{data:tags}]=await Promise.all([client.from('events').select('*').eq('id',id).single(),client.from('event_tags').select('*').eq('event_id',id)]);if(error)return showMessage(message,error.message,'error');editing=e;document.getElementById('eventId').value=e.id;['title','reward','duration','eligibility','content','url','participationMethod'].forEach(k=>{const db=k==='participationMethod'?'participation_method':k;document.getElementById(k).value=e[db]||''});document.getElementById('rewardDetails').value=e.reward_details||e.reward||'';document.getElementById('durationDetails').value=e.duration_details||e.duration||'';document.getElementById('durationMinutes').value=e.duration_minutes??'';document.getElementById('deadline').value=e.deadline||'';document.getElementById('winnerAnnouncementDate').value=e.winner_announcement_date||'';document.getElementById('existingImageUrl').value=e.image_url||'';(tags||[]).forEach(t=>selected[t.tag_type]?.add(t.tag));Object.keys(selected).forEach(renderTags)}
-async function uploadImage(file){if(!file)return document.getElementById('existingImageUrl').value||null;if(file.size>5*1024*1024)throw new Error('이미지는 5MB 이하만 가능합니다.');const ext=file.name.split('.').pop(),path=`${user.id}/${crypto.randomUUID()}.${ext}`;const {error}=await client.storage.from('event-images').upload(path,file);if(error)throw error;return client.storage.from('event-images').getPublicUrl(path).data.publicUrl}
-async function saveTags(eventId){await client.from('event_tags').delete().eq('event_id',eventId);const rows=[];for(const [type,set] of Object.entries(selected))for(const tag of set)rows.push({event_id:eventId,tag,tag_type:type});if(rows.length){const {error}=await client.from('event_tags').insert(rows);if(error)throw error}}
-document.getElementById('eventForm').addEventListener('submit',async e=>{e.preventDefault();try{const image_url=await uploadImage(document.getElementById('image').files[0]);const payload={author_id:user.id,title:val('title'),category:'기타',reward:val('reward'),reward_details:val('rewardDetails'),reward_type:null,reward_custom:null,payment_method:null,payment_method_custom:null,participation_method:val('participationMethod'),duration:val('duration'),duration_details:val('durationDetails'),duration_minutes:val('durationMinutes')?Number(val('durationMinutes')):null,eligibility:val('eligibility')||null,eligibility_region:null,deadline:val('deadline'),winner_announcement_date:val('winnerAnnouncementDate')||null,url:val('url')||null,image_url,content:val('content')};let id=editing?.id;if(editing){const {error}=await client.from('events').update(payload).eq('id',id);if(error)throw error}else{const {data,error}=await client.from('events').insert(payload).select('id').single();if(error)throw error;id=data.id}await saveTags(id);location.href=`index.html?event=${id}`}catch(err){showMessage(message,err.message,'error')}});
-document.getElementById('image').addEventListener('change',e=>{const f=e.target.files[0],img=document.getElementById('imagePreview');if(!f){img.style.display='none';return}img.src=URL.createObjectURL(f);img.style.display='block'});document.getElementById('cancelEdit').onclick=()=>location.href='mypage.html';load();
+
+async function load(){
+  if(!client)return;
+  const session=await window.SSALMUCK.getSession();
+  user=session?.user;
+  if(!user){document.getElementById('loginRequired').hidden=false;return}
+  document.getElementById('editorSection').hidden=false;
+  document.getElementById('userStatus').textContent=user.email;
+  const id=new URLSearchParams(location.search).get('edit');
+  if(id)await loadEdit(id);
+}
+
+async function loadEdit(id){
+  const {data:e,error}=await client.from('events').select('*').eq('id',id).single();
+  if(error)return showMessage(message,error.message,'error');
+  if(e.author_id!==user.id)return showMessage(message,'본인이 작성한 글만 수정할 수 있습니다.','error');
+  editing=e;
+  document.getElementById('eventId').value=e.id;
+  document.getElementById('title').value=e.title||'';
+  document.getElementById('reward').value=e.reward||'';
+  document.getElementById('participationMethod').value=e.participation_method||'';
+  document.getElementById('duration').value=e.duration||'';
+  document.getElementById('content').value=e.content||'';
+  document.getElementById('deadline').value=e.deadline||'';
+  document.getElementById('url').value=e.url||'';
+  document.getElementById('existingImageUrl').value=e.image_url||'';
+  if(e.image_url){const preview=document.getElementById('imagePreview');preview.src=e.image_url;preview.style.display='block'}
+  document.getElementById('cancelEdit').hidden=false;
+}
+
+async function uploadImage(file){
+  if(!file)return document.getElementById('existingImageUrl').value||null;
+  if(file.size>5*1024*1024)throw new Error('이미지는 5MB 이하만 가능합니다.');
+  const ext=(file.name.split('.').pop()||'jpg').toLowerCase();
+  const path=`${user.id}/${crypto.randomUUID()}.${ext}`;
+  const {error}=await client.storage.from('event-images').upload(path,file);
+  if(error)throw error;
+  return client.storage.from('event-images').getPublicUrl(path).data.publicUrl;
+}
+
+document.getElementById('image').addEventListener('change',e=>{
+  const file=e.target.files[0],preview=document.getElementById('imagePreview');
+  if(!file){preview.style.display='none';return}
+  preview.src=URL.createObjectURL(file);preview.style.display='block';
+});
+
+document.getElementById('eventForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  try{
+    const image_url=await uploadImage(document.getElementById('image').files[0]);
+    const payload={
+      author_id:user.id,
+      title:val('title'),
+      category:'기타',
+      reward:val('reward'),
+      participation_method:val('participationMethod'),
+      duration:val('duration'),
+      deadline:val('deadline')||null,
+      url:val('url')||null,
+      image_url,
+      content:val('content')
+    };
+    let id=editing?.id;
+    if(editing){
+      const {error}=await client.from('events').update(payload).eq('id',id);
+      if(error)throw error;
+    }else{
+      const {data,error}=await client.from('events').insert(payload).select('id').single();
+      if(error)throw error;
+      id=data.id;
+    }
+    location.href=`index.html?event=${id}`;
+  }catch(err){showMessage(message,err.message,'error')}
+});
+
+document.getElementById('cancelEdit').addEventListener('click',()=>location.href='mypage.html');
+load();
